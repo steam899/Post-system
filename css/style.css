@@ -1,0 +1,88 @@
+/* General UI Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.product-card {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+.cart-container {
+    height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Print Area Default Hidden */
+#print-area {
+    display: none;
+}
+
+/* Print Media Query */
+@media print {
+    /* Hide everything on the page except print-area */
+    body * {
+        visibility: hidden;
+    }
+    
+    #print-area, #print-area * {
+        visibility: visible;
+    }
+    
+    #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Receipt Styling */
+    .thermal-receipt {
+        font-family: 'Courier New', Courier, monospace;
+        color: #000;
+        margin: 0 auto;
+        background: #fff;
+    }
+
+    .thermal-receipt.size-80mm {
+        width: 300px; /* ~80mm */
+        font-size: 14px;
+    }
+
+    .thermal-receipt.size-58mm {
+        width: 210px; /* ~58mm */
+        font-size: 12px;
+    }
+
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .text-left { text-align: left; }
+    
+    .divider {
+        border-bottom: 1px dashed #000;
+        margin: 5px 0;
+    }
+
+    .flex-row {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .thermal-receipt img {
+        max-width: 80%;
+        margin-bottom: 10px;
+    }
+
+    /* Remove margins/headers for actual printing */
+    @page {
+        margin: 0;
+    }
+}
