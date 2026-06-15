@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetapan - POS System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html"><i class="fas fa-store"></i> MyPOS</a>
+            <div class="d-flex gap-2">
+                <a href="index.html" class="btn btn-outline-light"><i class="fas fa-home"></i> POS</a>
+                <a href="sales.html" class="btn btn-outline-light"><i class="fas fa-list"></i> Rekod Jualan</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Tetapan Perniagaan & Resit</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="settings-form">
+                            <div class="mb-3">
+                                <label>Nama Perniagaan</label>
+                                <input type="text" id="set-name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label>URL Logo (Kosongkan jika tiada)</label>
+                                <input type="text" id="set-logo" class="form-control" placeholder="https://contoh.com/logo.png">
+                            </div>
+                            <div class="mb-3">
+                                <label>Alamat</label>
+                                <textarea id="set-address" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>No. Telefon</label>
+                                    <input type="text" id="set-phone" class="form-control">
+                                </div>
+                                <div class="col">
+                                    <label>No. Pendaftaran (SSM)</label>
+                                    <input type="text" id="set-ssm" class="form-control">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label>Nota Footer Resit</label>
+                                <input type="text" id="set-footer" class="form-control" placeholder="Terima Kasih, Sila Datang Lagi!">
+                            </div>
+                            <div class="mb-4">
+                                <label>Saiz Kertas Resit</label>
+                                <select id="set-paper" class="form-select">
+                                    <option value="80mm">80mm (Standard POS)</option>
+                                    <option value="58mm">58mm (Mini POS)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Simpan Tetapan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/settings.js"></script>
+</body>
+</html>
