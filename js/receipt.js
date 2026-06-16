@@ -1,10 +1,7 @@
 function generateReceipt(trans) {
     const settings = JSON.parse(localStorage.getItem('pos_settings')) || {
-        name: "Kedai Saya", address: "", phone: "", ssm: "", footer: "Terima Kasih", paper: "80mm"
+        name: "Sistem POS", address: "Alamat Kedai", phone: "0123456789", ssm: "", footer: "Terima Kasih!", paper: "80mm", logo: "assets/logo.png"
     };
-
-    const dateObj = new Date(trans.date);
-    const dateStr = dateObj.toLocaleDateString('ms-MY') + ' ' + dateObj.toLocaleTimeString('ms-MY');
 
     let itemsHtml = '';
     trans.items.forEach(item => {
@@ -16,14 +13,14 @@ function generateReceipt(trans) {
         `;
     });
 
-    let logoHtml = settings.logo ? `<img src="${settings.logo}" alt="Logo">` : '';
+    let logoHtml = settings.logo ? `<img src="${settings.logo}" alt="Logo" onerror="this.style.display='none'">` : '';
 
     const receiptContent = `
         <div class="thermal-receipt size-${settings.paper}">
             <div class="text-center">
                 ${logoHtml}
                 <h3 style="margin:0;">${settings.name}</h3>
-                ${settings.ssm ? `<div style="font-size:12px;">No Pendaftaran: ${settings.ssm}</div>` : ''}
+                ${settings.ssm ? `<div style="font-size:12px;">No Pend: ${settings.ssm}</div>` : ''}
                 <div style="font-size:12px; white-space: pre-line;">${settings.address}</div>
                 ${settings.phone ? `<div style="font-size:12px;">Tel: ${settings.phone}</div>` : ''}
             </div>
@@ -31,8 +28,8 @@ function generateReceipt(trans) {
             <div class="divider"></div>
             
             <div class="flex-row" style="font-size:12px;">
-                <span>Tarikh: ${dateStr}</span>
-                <span>No: #${trans.receiptNo}</span>
+                <span>Tarikh: ${trans.date}</span>
+                <span>Resit: ${trans.receiptNo}</span>
             </div>
 
             <div class="divider"></div>
@@ -44,16 +41,16 @@ function generateReceipt(trans) {
             <div class="divider"></div>
             
             <div class="flex-row">
-                <strong>Jumlah</strong>
+                <strong>JUMLAH</strong>
                 <strong>RM ${trans.total.toFixed(2)}</strong>
             </div>
             <div class="flex-row">
-                <span>Tunai</span>
-                <span>RM ${trans.cash.toFixed(2)}</span>
+                <span>DIBAYAR</span>
+                <span>RM ${trans.paid.toFixed(2)}</span>
             </div>
             <div class="flex-row">
-                <span>Baki</span>
-                <span>RM ${trans.change.toFixed(2)}</span>
+                <span>BAKI</span>
+                <span>RM ${trans.balance.toFixed(2)}</span>
             </div>
             
             <div class="divider"></div>
@@ -67,6 +64,5 @@ function generateReceipt(trans) {
     const printArea = document.getElementById('print-area');
     printArea.innerHTML = receiptContent;
 
-    // Trigger Print
     window.print();
 }
