@@ -1,48 +1,55 @@
-// Mock Data Produk (Dalam realiti, ini datang dari backend/DB)
-const products = [
-    { id: 1, name: "Nasi Lemak Ayam", price: 8.50, img: "https://via.placeholder.com/150/ff7f7f/333333?text=Nasi+Lemak" },
-    { id: 2, name: "Teh Tarik", price: 2.50, img: "https://via.placeholder.com/150/ffb84d/333333?text=Teh+Tarik" },
-    { id: 3, name: "Milo Ais", price: 3.00, img: "https://via.placeholder.com/150/4dff4d/333333?text=Milo+Ais" },
-    { id: 4, name: "Roti Canai", price: 1.50, img: "https://via.placeholder.com/150/ffff4d/333333?text=Roti+Canai" },
-    { id: 5, name: "Mee Goreng", price: 6.00, img: "https://via.placeholder.com/150/ff4dff/333333?text=Mee+Goreng" },
-    { id: 6, name: "Kopi O Panas", price: 2.00, img: "https://via.placeholder.com/150/8c8c8c/ffffff?text=Kopi+O" }
-];
-
+let products = [];
 let cart = [];
 let grandTotal = 0;
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Ambil data produk (jika kosong, ia akan guna fungsi default dalam file products.js jika ada, 
+    // jika tidak kita set default di sini)
+    products = JSON.parse(localStorage.getItem('pos_products'));
+    if (!products || products.length === 0) {
+        products = [
+            { id: 1, sku: "NA001", name: "Nasi Ayam Original", price: 8.90, category: "Makanan" },
+            { id: 2, sku: "MN001", name: "Teh O Ais", price: 2.00, category: "Minuman" }
+        ];
+        localStorage.setItem('pos_products', JSON.stringify(products));
+    }
+    
     renderProducts(products);
+
+    // Fungsi carian
+    document.getElementById('search-product').addEventListener('input', (e) => {
+        const keyword = e.target.value.toLowerCase();
+        const filtered = products.filter(p => 
+            p.name.toLowerCase().includes(keyword) || 
+            p.sku.toLowerCase().includes(keyword)
+        );
+        renderProducts(filtered);
+    });
 });
 
-// Render Products
 function renderProducts(items) {
     const container = document.getElementById('product-list');
     container.innerHTML = '';
+    
+    if (items.length === 0) {
+        container.innerHTML = `<div class="col-12 text-center text-muted mt-4">Tiada produk dijumpai.</div>`;
+        return;
+    }
+
     items.forEach(p => {
         container.innerHTML += `
-            <div class="col-md-4 col-sm-6 mb-3">
-                <div class="card product-card shadow-sm" onclick="addToCart(${p.id})">
-                    <img src="${p.img}" class="card-img-top" alt="${p.name}">
-                    <div class="card-body p-2 text-center">
-                        <h6 class="card-title mb-1">${p.name}</h6>
-                        <strong class="text-primary">RM ${p.price.toFixed(2)}</strong>
-                    </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="card product-card p-3 shadow-sm text-center" onclick="addToCart(${p.id})">
+                    <span class="cat-badge mx-auto mb-2">${p.category}</span>
+                    <strong class="mb-1">${p.name}</strong>
+                    <small class="text-muted mb-2">SKU: ${p.sku}</small>
+                    <h5 class="text-primary mb-0">RM ${p.price.toFixed(2)}</h5>
                 </div>
             </div>
         `;
     });
 }
 
-// Search Product
-document.getElementById('search-product').addEventListener('input', (e) => {
-    const keyword = e.target.value.toLowerCase();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(keyword));
-    renderProducts(filtered);
-});
-
-// Add to Cart
 function addToCart(id) {
     const product = products.find(p => p.id === id);
     const existing = cart.find(c => c.id === id);
@@ -50,12 +57,12 @@ function addToCart(id) {
     if (existing) {
         existing.qty++;
     } else {
-        cart.push({ ...product, qty: 1 });
+        // Salin data mengikut format (name, qty, price)
+        cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
     }
     updateCart();
 }
 
-// Update Cart Quantity
 function updateQty(id, change) {
     const item = cart.find(c => c.id === id);
     if (item) {
@@ -67,7 +74,6 @@ function updateQty(id, change) {
     }
 }
 
-// Render & Calculate Cart
 function updateCart() {
     const cartEl = document.getElementById('cart-items');
     cartEl.innerHTML = '';
@@ -79,38 +85,36 @@ function updateCart() {
 
         cartEl.innerHTML += `
             <li class="list-group-item d-flex justify-content-between align-items-center p-2">
-                <div>
+                <div style="flex:1;">
                     <h6 class="my-0">${item.name}</h6>
                     <small class="text-muted">RM ${item.price.toFixed(2)}</small>
                 </div>
                 <div class="d-flex align-items-center">
                     <button class="btn btn-sm btn-outline-danger px-2 py-0" onclick="updateQty(${item.id}, -1)">-</button>
-                    <span class="mx-2">${item.qty}</span>
+                    <span class="mx-2" style="min-width: 20px; text-align:center;">${item.qty}</span>
                     <button class="btn btn-sm btn-outline-success px-2 py-0" onclick="updateQty(${item.id}, 1)">+</button>
-                    <strong class="ms-3" style="width: 60px; text-align: right;">RM ${itemTotal.toFixed(2)}</strong>
+                    <strong class="ms-3" style="width: 70px; text-align: right;">RM ${itemTotal.toFixed(2)}</strong>
                 </div>
             </li>
         `;
     });
 
-    document.getElementById('subtotal').innerText = `RM ${grandTotal.toFixed(2)}`;
     document.getElementById('total').innerText = `RM ${grandTotal.toFixed(2)}`;
     document.getElementById('modal-total').innerText = `RM ${grandTotal.toFixed(2)}`;
-    
     document.getElementById('btn-checkout').disabled = cart.length === 0;
 }
 
-// Payment Logic
+// Logik Bayaran
 const cashInput = document.getElementById('cash-received');
 const changeEl = document.getElementById('modal-change');
 const btnConfirm = document.getElementById('btn-confirm-pay');
 
 cashInput.addEventListener('input', () => {
-    const cash = parseFloat(cashInput.value) || 0;
-    const change = cash - grandTotal;
+    const paid = parseFloat(cashInput.value) || 0;
+    const balance = paid - grandTotal;
     
-    if (change >= 0 && cart.length > 0) {
-        changeEl.innerText = `RM ${change.toFixed(2)}`;
+    if (balance >= 0 && cart.length > 0) {
+        changeEl.innerText = `RM ${balance.toFixed(2)}`;
         changeEl.classList.replace('text-danger', 'text-success');
         btnConfirm.disabled = false;
     } else {
@@ -120,40 +124,47 @@ cashInput.addEventListener('input', () => {
     }
 });
 
-// Checkout & Save
 btnConfirm.addEventListener('click', () => {
-    const cash = parseFloat(cashInput.value);
-    const change = cash - grandTotal;
+    const paid = parseFloat(cashInput.value);
+    const balance = paid - grandTotal;
 
-    // Get previous transactions to auto-increment receipt number
     let transactions = JSON.parse(localStorage.getItem('pos_transactions')) || [];
-    let receiptNo = "1001";
-    if (transactions.length > 0) {
-        const lastReceipt = parseInt(transactions[transactions.length - 1].receiptNo);
-        receiptNo = (lastReceipt + 1).toString();
-    }
+    
+    // Generate Nombor Resit Format: NA-YYYYMMDD-XXXX
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const datePrefix = `${yyyy}${mm}${dd}`;
+
+    const todayTrans = transactions.filter(t => t.receiptNo && t.receiptNo.includes(datePrefix));
+    const seq = String(todayTrans.length + 1).padStart(4, '0');
+    const receiptNo = `NA-${datePrefix}-${seq}`;
+
+    // Format Tarikh "YYYY-MM-DD HH:mm"
+    const hh = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    const dateFormatted = `${yyyy}-${mm}-${dd} ${hh}:${min}`;
 
     const transactionData = {
-        date: new Date().toISOString(),
         receiptNo: receiptNo,
-        items: cart,
+        date: dateFormatted,
+        items: cart.map(c => ({ name: c.name, qty: c.qty, price: c.price })),
         total: grandTotal,
-        cash: cash,
-        change: change
+        paid: paid,
+        balance: balance
     };
 
-    // Save to LocalStorage
     transactions.push(transactionData);
     localStorage.setItem('pos_transactions', JSON.stringify(transactions));
 
-    // Hide Modal
     const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
     modal.hide();
 
-    // Print Receipt (function from receipt.js)
+    // Print resit menggunakan logic receipt.js
     generateReceipt(transactionData);
 
-    // Reset Cart
+    // Reset Sistem
     cart = [];
     updateCart();
     cashInput.value = '';
