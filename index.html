@@ -3,50 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rekod Jualan - POS System</title>
+    <title>POS System - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="bg-light">
 
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.html"><i class="fas fa-store"></i> MyPOS</a>
-            <div class="d-flex gap-2">
-                <a href="index.html" class="btn btn-outline-light"><i class="fas fa-home"></i> POS</a>
-                <a href="settings.html" class="btn btn-outline-light"><i class="fas fa-cog"></i> Tetapan</a>
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-store"></i> MyPOS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-2">
+                    <li class="nav-item"><a href="index.html" class="btn btn-light text-primary"><i class="fas fa-desktop"></i> POS</a></li>
+                    <li class="nav-item"><a href="products.html" class="btn btn-outline-light"><i class="fas fa-box"></i> Produk</a></li>
+                    <li class="nav-item"><a href="sales.html" class="btn btn-outline-light"><i class="fas fa-list"></i> Jualan</a></li>
+                    <li class="nav-item"><a href="settings.html" class="btn btn-outline-light"><i class="fas fa-cog"></i> Tetapan</a></li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <div class="card shadow-sm">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Rekod Jualan</h5>
-                <button class="btn btn-success" onclick="exportCSV()"><i class="fas fa-file-csv"></i> Export CSV</button>
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <!-- Product Section -->
+            <div class="col-md-8">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <input type="text" id="search-product" class="form-control form-control-lg mb-3" placeholder="Cari nama atau SKU produk...">
+                        <!-- Filter Kategori (Pilihan) -->
+                        <div id="category-filters" class="mb-3"></div>
+                        
+                        <div class="row g-2" id="product-list">
+                            <!-- Produk akan dipaparkan di sini -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <input type="text" id="search-sales" class="form-control mb-3" placeholder="Cari No. Resit...">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Tarikh/Masa</th>
-                                <th>No. Resit</th>
-                                <th>Item Terjual</th>
-                                <th>Jumlah (RM)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="sales-table-body">
-                            <!-- Sales rows -->
-                        </tbody>
-                    </table>
+
+            <!-- Cart Section -->
+            <div class="col-md-4">
+                <div class="card shadow-sm cart-container">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-shopping-cart"></i> Troli</h5>
+                    </div>
+                    <div class="card-body p-0 cart-items-area">
+                        <ul class="list-group list-group-flush" id="cart-items">
+                            <!-- Item troli -->
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <div class="d-flex justify-content-between mb-3 fs-4 text-primary">
+                            <strong>Jumlah:</strong>
+                            <strong id="total">RM 0.00</strong>
+                        </div>
+                        <button class="btn btn-success w-100 btn-lg" id="btn-checkout" data-bs-toggle="modal" data-bs-target="#paymentModal" disabled>
+                            <i class="fas fa-money-bill-wave"></i> Bayar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="js/sales.js"></script>
+    <!-- Modal Pembayaran -->
+    <div class="modal fade" id="paymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Pembayaran</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h3 class="text-center mb-4 text-primary">Perlu Dibayar: <br><span id="modal-total">RM 0.00</span></h3>
+                    <div class="mb-3">
+                        <label>Jumlah Diterima / Dibayar (RM)</label>
+                        <input type="number" id="cash-received" class="form-control form-control-lg text-center" placeholder="0.00">
+                    </div>
+                    <h4 class="text-center mt-3 text-danger">Baki: <span id="modal-change">RM 0.00</span></h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success" id="btn-confirm-pay" disabled>Sahkan & Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Area -->
+    <div id="print-area"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/receipt.js"></script>
+    <script src="js/pos.js"></script>
 </body>
 </html>
