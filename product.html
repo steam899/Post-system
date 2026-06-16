@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <title>Produk - POS System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html"><i class="fas fa-store"></i> MyPOS</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto gap-2">
+                    <li class="nav-item"><a href="index.html" class="btn btn-outline-light"><i class="fas fa-desktop"></i> POS</a></li>
+                    <li class="nav-item"><a href="products.html" class="btn btn-light text-primary"><i class="fas fa-box"></i> Produk</a></li>
+                    <li class="nav-item"><a href="sales.html" class="btn btn-outline-light"><i class="fas fa-list"></i> Jualan</a></li>
+                    <li class="nav-item"><a href="settings.html" class="btn btn-outline-light"><i class="fas fa-cog"></i> Tetapan</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Tambah Produk</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="form-product">
+                            <div class="mb-3">
+                                <label>SKU</label>
+                                <input type="text" id="p-sku" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label>Nama Produk</label>
+                                <input type="text" id="p-name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label>Harga (RM)</label>
+                                <input type="number" step="0.01" id="p-price" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label>Kategori</label>
+                                <input type="text" id="p-category" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Simpan Produk</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Nama</th>
+                                    <th>Kategori</th>
+                                    <th>Harga (RM)</th>
+                                    <th>Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-table-body">
+                                <!-- Data diletakkan melalui JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/products.js"></script>
+</body>
+</html> 
