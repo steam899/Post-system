@@ -1,16 +1,23 @@
-/* General UI Styling */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
+/* Product Tile Styling (Tanpa Gambar) */
 .product-card {
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.1s;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    height: 100%;
 }
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+.product-card:active {
+    transform: scale(0.95);
+}
+.product-card .cat-badge {
+    font-size: 0.7rem;
+    background: #e9ecef;
+    padding: 3px 8px;
+    border-radius: 12px;
+    color: #495057;
 }
 
 .cart-container {
@@ -18,71 +25,30 @@ body {
     display: flex;
     flex-direction: column;
 }
-
-/* Print Area Default Hidden */
-#print-area {
-    display: none;
+.cart-items-area {
+    overflow-y: auto;
+    flex-grow: 1;
 }
 
-/* Print Media Query */
+#print-area { display: none; }
+
 @media print {
-    /* Hide everything on the page except print-area */
-    body * {
-        visibility: hidden;
-    }
-    
-    #print-area, #print-area * {
-        visibility: visible;
-    }
-    
+    body * { visibility: hidden; }
+    #print-area, #print-area * { visibility: visible; }
     #print-area {
         position: absolute;
-        left: 0;
-        top: 0;
-        display: block;
-        margin: 0;
-        padding: 0;
+        left: 0; top: 0;
+        display: block; width: 100%;
     }
-
-    /* Receipt Styling */
     .thermal-receipt {
         font-family: 'Courier New', Courier, monospace;
-        color: #000;
-        margin: 0 auto;
-        background: #fff;
+        color: #000; margin: 0 auto;
     }
-
-    .thermal-receipt.size-80mm {
-        width: 300px; /* ~80mm */
-        font-size: 14px;
-    }
-
-    .thermal-receipt.size-58mm {
-        width: 210px; /* ~58mm */
-        font-size: 12px;
-    }
-
+    .thermal-receipt.size-80mm { width: 300px; font-size: 14px; }
+    .thermal-receipt.size-58mm { width: 210px; font-size: 12px; }
     .text-center { text-align: center; }
-    .text-right { text-align: right; }
-    .text-left { text-align: left; }
-    
-    .divider {
-        border-bottom: 1px dashed #000;
-        margin: 5px 0;
-    }
-
-    .flex-row {
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .thermal-receipt img {
-        max-width: 80%;
-        margin-bottom: 10px;
-    }
-
-    /* Remove margins/headers for actual printing */
-    @page {
-        margin: 0;
-    }
-}
+    .divider { border-bottom: 1px dashed #000; margin: 5px 0; }
+    .flex-row { display: flex; justify-content: space-between; }
+    .thermal-receipt img { max-width: 70%; margin-bottom: 10px; }
+    @page { margin: 0; }
+} 
